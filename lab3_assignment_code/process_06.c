@@ -11,17 +11,17 @@ int main(int argc, char *argv[]){
     printf("counting to 5!\n");
     pid = fork();
 
-    if(</1>) {
+    if(pid>0) {
         pid2 = fork();
 
-        if(</2>) {
+        if(pid2 > 0) {
             printf("1!\n");
-            waitpid(</3>);
+            waitpid(pid, &status, 0);
             printf("3!\n");
-            waitpid(</4>);
+            waitpid(pid2, &status, 0);
             printf("5!\n");
         }
-        else if (</5>) {
+        else if (pid2 == 0) {
             sleep(3);
             printf("4!\n");
             exit(3);
@@ -30,7 +30,7 @@ int main(int argc, char *argv[]){
             return -1;
         }
     }
-    else if (</6>) {
+    else if (pid == 0) {
         sleep(1);
         printf("2!\n");
         exit(2);

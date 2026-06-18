@@ -16,7 +16,7 @@ void* worker(void* arg){
 
     print_addr(&global, arg, &thread, &thread_static);
 
-    pthread_<1/>(NULL);
+    pthread_exit(NULL); // <1/>: pthread_exit
 }
 
 int main(int argc, char* argv[]){
@@ -28,7 +28,7 @@ int main(int argc, char* argv[]){
     print_addr(&global, &main, NULL, NULL);
 
     for(int i = 0; i < NUM_THREADS; i++){
-        status = pthread_<2/>(<3/>);
+        status = pthread_create(&tids[i], NULL, worker, NULL); // <2/>, <3/>
 
         if(status != 0){
             printf("WTF?");
@@ -37,18 +37,8 @@ int main(int argc, char* argv[]){
     }
 
     for(int i = 0; i < NUM_THREADS; i++){
-        pthread_<4/>(<5/>, NULL);
+        pthread_join(tids[i], NULL); // <4/>, <5/>
     }
 
     return 0;
 }
-
-/*
-Expected output:
-
-global		main		thread		thread-static
-AxAAAAAA	BxBBBBBB	(nil)	    (nil)   // 'nil' means 'NULL'
-AxAAAAAA	CxCCCCCC	DxDD....	ExEEEEEE
-AxAAAAAA	CxCCCCCC	DxDD....	ExEEEEEE
-AxAAAAAA	CxCCCCCC	DxDD....	ExEEEEEE
-*/

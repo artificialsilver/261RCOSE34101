@@ -14,15 +14,15 @@ int main(int argc, char *argv[]){
 
     pid = fork();
 
-    if(</1>){
+    if(pid>0){
         // HINT: The parent process should fall into this scope.
-        wait(</2>);
-        printf("%d!\n", </3>);
-    } else if(</4>){
+        wait(&status);
+        printf("%d!\n",WEXITSTATUS(status));
+    } else if(pid==0){
         // HINT: The child process should fall into this scope.
         sleep(1);
         printf("2!\n");
-        exit(</5>);
+        exit(3);
         printf("4!");
     } else {
         printf("4,321,222");

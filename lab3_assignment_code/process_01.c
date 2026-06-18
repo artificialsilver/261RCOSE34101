@@ -4,21 +4,20 @@
 #include <stdbool.h>
 
 
-static bool young = true;
+static bool young = true; // static 전역 변수. data segment에 저장됨
 
-int main(int argc, char *argv[]){
-    // Allocated in stack segment.
-    bool wild = true;
+int main(int argc, char *argv[]){ 
+    bool wild = true; // 지역변수. stack segment에 저장됨
     
     pid_t pid;
 
     switch(pid = fork()){
-        </1>:
+        default:
             // HINT: The parent process should fall into this scope.
             young = false;
             wild = false;
             break;
-        </2>: //child
+        case 0: //child
             // HINT: The child process should fall into this scope.
             break;
         case -1:
@@ -26,7 +25,7 @@ int main(int argc, char *argv[]){
             return -1;
     }
 
-    printf("[%ld] (%s) I am %s and %s.\n", (long)</3>, pid == </4> ? "Child" : "Parent", young == true ? "young" : "old", wild == true ? "wild" : "calm");
+    printf("[%ld] (%s) I am %s and %s.\n", (long)getpid(), pid == 0 ? "Child" : "Parent", young == true ? "young" : "old", wild == true ? "wild" : "calm");
 
     return 0;
 }

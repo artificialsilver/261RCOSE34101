@@ -5,7 +5,7 @@ int main(int argc, char *argv[]){
     printf("where am I?\n");
 
 
-    execl(</1>);
+    execl("/bin/pwd", "pwd", NULL);
 
     return 0;
 }

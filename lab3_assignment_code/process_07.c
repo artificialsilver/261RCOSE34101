@@ -20,31 +20,34 @@ int main(int argc, char* argv[]) {
     case -1:
         printf("fork failed\n");
         return -1;
-    :// hint: Which case handles the parent process based on the return value of fork?
+    default: 
+    // hint: Which case handles the parent process based on the return value of fork?
         // hint: How can the parent process retrieve its own unique PID?
-        parent_pid =
+        parent_pid = getpid();
         printf("[%d] I am a parent\n", parent_pid);
 
         // hint: How can the parent block its execution until the child finishes?
-
-        printf("[%d] ....and my child's favorite number is %d\n", , );
+        wait(&status);
+        printf("[%d] ....and my child's favorite number is %d\n",parent_pid, WEXITSTATUS(status));
         break;
-    :// hint: Which case handles the child process?
+    case 0:
+    // hint: Which case handles the child process?
         // hint: To ensure the parent prints its message first, what should the child do?
+        sleep(1);
 
         favorite_number = 5;
 
         // hint: How can the child identifying its own PID? 
-        child_pid =
+        child_pid = getpid();
 
         // hint: How can the child identify its parent's PID?
-        parent_pid =
+        parent_pid = getpid();
 
-        printf("[%d] and I am a child! And my parent's PID is [%d]\n", , );
-        printf("[%d] my parent's favorite fruit is %s but he doesn't know that my favorite number is %d\n", , , );
+        printf("[%d] and I am a child! And my parent's PID is [%d]\n", child_pid, parent_pid );
+        printf("[%d] my parent's favorite fruit is %s but he doesn't know that my favorite number is %d\n",child_pid, favorite_fruit, favorite_number );
 
         // hint: How does the child terminate and pass its favorite number to the parent?
-
+        exit(favorite_number);
         break;
     }
 

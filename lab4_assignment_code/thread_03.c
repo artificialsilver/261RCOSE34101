@@ -16,7 +16,7 @@ void* worker(void* arg){
         progress = cnt++;
     }
 
-    pthread_<1/>((<2/>)(intptr_t)progress);
+    pthread_exit((void*)(intptr_t)progress); // <1/>, <2/>
 }
 
 int main(int argc, char* argv[]){
@@ -25,7 +25,7 @@ int main(int argc, char* argv[]){
     void* progress;
 
     for(int i = 0; i < NUM_THREADS; i++){
-        status = pthread_<3/>(<4/>);
+        status = pthread_create(&tids[i], NULL, worker, NULL); // <3/>, <4/>
         if(status != 0){
             printf("error");
             return -1;
@@ -33,7 +33,7 @@ int main(int argc, char* argv[]){
     }
 
     for(int i = 0; i < NUM_THREADS; i++){
-        pthread_<5/>(<6/>);
+        pthread_join(tids[i], &progress); // <5/>, <6/>
 
         printf("\r%d ", (int)(intptr_t)progress);
 
@@ -46,11 +46,3 @@ int main(int argc, char* argv[]){
 
     return 0;
 }
-
-/*
-Expected output:
-
-6267912 (it could be any number)
-expectd: 1000000
-result: some number (could be 1000000)
-*/

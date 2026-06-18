@@ -8,26 +8,26 @@ int main(int argc, char *argv[]){
 
     switch (pid=fork())
     {
-        </1>:
+        default:
             // HINT: The parent process should fall into this scope.
             printf("My name is %s and I am a parent.\n", name);
             sleep(3);
             break;
 
-        </2>:
+        case 0:
             sleep(1);
             // HINT: The child process should fall into this scope
             char child_name[] = "Michael";
             pid_t pid2 = fork();
-            switch(</3>) {
+            switch(pid2) {
                 default:
-                    printf("My name is %s and my father is %s. My pid is %d\n", </4>);
+                    printf("My name is %s and my father is %s. My pid is %d\n", child_name, name, getpid());
                     break;
                 
-                </5>:
+                case 0:
                 sleep(1);
                     char grandchild_name[] = "Steven";
-                    printf("My name is %s! My father's name is %s and my grandpa is called %s. My pid is %d\n", </6>);
+                    printf("My name is %s! My father's name is %s and my grandpa is called %s. My pid is %d\n",grandchild_name, child_name, name, getpid());
                     break;
 
                 case -1:

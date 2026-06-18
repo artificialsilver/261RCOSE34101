@@ -11,11 +11,11 @@ int main(int argc, char *argv[]){
     
     pid = fork();
 
-    if(</1>){
+    if(pid==0){
         // HINT: The parent process should fall into this scope.
         val++;
         sleep(1);
-    } else if(</2>) {
+    } else if(pid>0) {
         // HINT: The child process should fall into this scope.
         sleep(2);
         val = val -3;
@@ -24,7 +24,7 @@ int main(int argc, char *argv[]){
         return -1;
     }
     
-    printf("The value of %s is %d.\n", pid == </3> ? "child" : "parent", </4>);
+    printf("The value of %s is %d.\n", pid == 0 ? "child" : "parent", val);
 
     return 0;
 }

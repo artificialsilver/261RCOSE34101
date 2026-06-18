@@ -8,10 +8,9 @@
 #define SPREADING 2
 
 static _Atomic int cnt_task = NUM_TASKS;
-//hint1: Use cond to eliminate the busy waiting
-//hint1: A mutex is required to use condition variables.
-
-
+// hint1: 바쁜 대기를 제거하기 위해 조건 변수와 뮤텍스 선언
+pthread_mutex_t lock;
+pthread_cond_t cond;
 
 void spread_words() {
     sleep(SPREADING);
@@ -20,8 +19,8 @@ void spread_words() {
     pthread_mutex_lock(&lock);
     cnt_task--;
     if (cnt_task == 0) {
-        //hint2: Wake up the main thread when cnt_task becomes 0.
-        
+        // hint2: cnt_task가 0이 되면 대기 중인 메인 스레드를 깨움
+        pthread_cond_signal(&cond);
     }
     pthread_mutex_unlock(&lock);
 }
@@ -32,8 +31,8 @@ void* subordinate(void* arg) {
     for(int i = 0; i < 3; i++) {
         spread_words();
     }
-    //hint3: Finish up the threads
-
+    // hint3: 스레드 종료
+    pthread_exit(NULL);
 }
 
 void* king(void* arg) {
@@ -41,11 +40,11 @@ void* king(void* arg) {
     int status;
     printf("spread the words ");
 
-    //hint4: You should start your subordinate here
-    
-
-
-
+    // hint4: 부하 스레드 생성 및 시작
+    status = pthread_create(&tid, NULL, subordinate, NULL);
+    if (status != 0) {
+        pthread_exit(NULL);
+    }
 
     pthread_detach(tid);
 
@@ -56,9 +55,10 @@ void* king(void* arg) {
 int main(int argc, char* argv[]) {
     pthread_t tid;
     int status;
-    //hint5: Initialize the mutex and condition variable before use.
     
-
+    // hint5: 사용하기 전 뮤텍스와 조건 변수 초기화
+    pthread_mutex_init(&lock, NULL);
+    pthread_cond_init(&cond, NULL);
 
     status = pthread_create(&tid, NULL, king, NULL);
     if (status != 0) {
@@ -67,30 +67,17 @@ int main(int argc, char* argv[]) {
     }
     pthread_join(tid, NULL);
 
-    //hint6: Eliminate busy waiting by using a mutex and condition variable.
-    //hint6: This solution should be an upgraded version of thread_05.c.
-    
+    // hint6: 뮤텍스와 조건 변수를 사용하여 바쁜 대기 제거
+    pthread_mutex_lock(&lock);
+    while (cnt_task > 0) {
+        pthread_cond_wait(&cond, &lock);
+    }
+    pthread_mutex_unlock(&lock);
 
-
-
-
-
-    //hint7: You have to clean up mutex and cond
-
-
+    // hint7: 사용이 끝난 뮤텍스와 조건 변수 정리
+    pthread_mutex_destroy(&lock);
+    pthread_cond_destroy(&cond);
 
     printf("The words have been spread...\n");
     return 0;
 }
-
-/*
-Expected output:
-
-spread the words that I am king!
-[subordinate] as you wish
-[subordinate] spreading words...
-[subordinate] spreading words...
-[subordinate] spreading words...
-The words have been spread...
-
-*/

@@ -21,8 +21,8 @@ void* subordinate(void* arg) {
     for(int i = 0; i < 3; i++) {
         spread_words();
     }
-    //hint1: Finish up the threads
-
+    // hint1: 스레드 종료
+    pthread_exit(NULL); 
 }
 
 void* king(void* arg) {
@@ -30,12 +30,9 @@ void* king(void* arg) {
     int status;
     printf("spread the words ");
 
-    //hint2: You should start your subordinate here
+    // hint2: 부하 스레드 생성 및 시작
+    status = pthread_create(&tid, NULL, subordinate, NULL);
     
-
-
-
-
     pthread_detach(tid);
 
     printf("that I am king!\n");
@@ -53,23 +50,11 @@ int main(int argc, char* argv[]) {
     }
     pthread_join(tid, NULL);
 
-    //hint3: Make the main thread wait for the subordinate to finish
-    //hint3: But cannot use pthread_join because subordinate thread is detached
-    //hint3: Think busy waiting
-   
+    // hint3: busy waiting을 이용한 부하 스레드 종료 대기
+    while(cnt_task > 0) {
+        usleep(1000);
+    }
 
     printf("The words have been spread...\n");
     return 0;
 }
-
-/*
-Expected output:
-
-spread the words that I am king!
-[subordinate] as you wish
-[subordinate] spreading words...
-[subordinate] spreading words...
-[subordinate] spreading words...
-The words have been spread...
-
-*/

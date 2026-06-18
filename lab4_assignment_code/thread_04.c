@@ -7,17 +7,17 @@
 #include <stdint.h>
 #define NUM_THREADS 100
 #define NUM_TASKS 10000
-pthread_mutex_t lock;
 
+// 뮤텍스 초기화
+pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER; 
 static int cnt = 0;
 
 void* worker(void* arg){
     int progress;
     for(int i = 0; i < NUM_TASKS; i++){
-        pthread_<1/>(<2/>);
+        pthread_mutex_lock(&lock);    // <1/>, <2/>
         progress = cnt++;
-        pthread_<3/>(<4/>);
-
+        pthread_mutex_unlock(&lock);  // <3/>, <4/>
     }
 
     pthread_exit((void*)(intptr_t)progress);
@@ -29,8 +29,8 @@ int main(int argc, char* argv[]){
     void* progress;
 
     for(int i = 0; i < NUM_THREADS; i++){
-        status = pthread_<5/>(<6/>);
-
+        // <5/>, <6/>
+        status = pthread_create(&tids[i], NULL, worker, NULL); 
         if(status != 0){
             printf("error");
             return -1;
@@ -38,7 +38,8 @@ int main(int argc, char* argv[]){
     }
     
     for(int i = 0; i < NUM_THREADS; i++){
-        pthread_<7/>(<8/>);
+        // <7/>, <8/>
+        pthread_join(tids[i], &progress); 
         
         printf("\r%d ", (int)(intptr_t)progress);
 
@@ -51,11 +52,3 @@ int main(int argc, char* argv[]){
 
     return 0;
 }
-
-/*
-Expected output:
-
-6267912 (it could be any number)
-expected: 1000000
-result: 1000000
-*/
